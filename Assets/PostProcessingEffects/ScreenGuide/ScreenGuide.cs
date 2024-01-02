@@ -35,15 +35,15 @@ namespace RSPostProcessing
         protected override void OnBeforeRenderImage(RenderTexture source, RenderTexture destination, Material material)
         {
             if (_alwaysShowCenter)
-                Material.EnableKeyword(ALWAYS_SHOW_CENTER_KEYWORD);
+                material.EnableKeyword(ALWAYS_SHOW_CENTER_KEYWORD);
             else
-                Material.DisableKeyword(ALWAYS_SHOW_CENTER_KEYWORD);
+                material.DisableKeyword(ALWAYS_SHOW_CENTER_KEYWORD);
 
-            Material.SetFloat(LINES_X_ID, _verticalLines);
-            Material.SetFloat(LINES_Y_ID, _horizontalLines);
-            Material.SetColor(COLOR_X_ID, _colorX);
-            Material.SetColor(COLOR_Y_ID, _colorY);
-            Material.SetFloat(SCALE_ID, _scale);
+            material.SetFloat(LINES_X_ID, _verticalLines);
+            material.SetFloat(LINES_Y_ID, _horizontalLines);
+            material.SetColor(COLOR_X_ID, _colorX);
+            material.SetColor(COLOR_Y_ID, _colorY);
+            material.SetFloat(SCALE_ID, _scale);
         }
     }
 }
