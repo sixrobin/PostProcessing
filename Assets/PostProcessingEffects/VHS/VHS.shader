@@ -14,8 +14,6 @@ Shader "RSPostProcessing/VHS"
             #pragma vertex vert
             #pragma fragment frag
 
-            #include "UnityCG.cginc"
-
             struct appdata
             {
                 float4 vertex : POSITION;
@@ -106,7 +104,17 @@ Shader "RSPostProcessing/VHS"
                 float3 rightSample = tex2D(_MainTex, float2(colorSamplesUV.x - sampleOffset, colorSamplesUV.y)).rgb * (1 - leftSampleTone);
                 float3 result = leftSample + rightSample;
 
-                float3 yiqSpaceResult = RGBtoYIQ(result);
+                // White noise.
+                float3 noiseColor = float3(2, 2, 2);
+                float2 steppedScreenUV = floor(colorSamplesUV * (_ScreenParams.xy / 8)) / (_ScreenParams.xy / 8);
+                float2 whiteNoiseMask = float2(hash23(float2(noisyTapeUV.y, _Time.y)).r, 0);
+                whiteNoiseMask += steppedScreenUV;
+                whiteNoiseMask.x *= 0.1;
+                float3 noisedResult = lerp(result, noiseColor, pow(hash23(whiteNoiseMask).x, 30)); // TODO: Expose value.
+
+                float noisedColorMask = (trackingLineMask * 0.7 + 0.3) * scanlinesMask;
+                
+                float3 yiqSpaceResult = RGBtoYIQ(noisedColorMask < 0.3 ? result : noisedResult);
                 yiqSpaceResult *= float3(0.9, 1.1, 1.5);
                 yiqSpaceResult += float3(0.1, -0.1, 0);
                 yiqSpaceResult.yz = Rotate(yiqSpaceResult.yz, trackingLineMask * 0.3); // TODO: Expose value.
