@@ -3,6 +3,15 @@ Shader "RSPostProcessing/VHS"
     Properties
     {
         [HideInInspector] _MainTex ("Texture", 2D) = "white" {}
+        
+        _ChromaticAberrationLeftTone ("Chromatic Aberration Left Tone", Color) = (0, 1, 1, 1)
+        _ChromaticAberrationPixelSize ("Chromatic Aberration Pixel Size", Float) = 5
+        _TrackingLineSmoothstepMin ("Tracking Line Smoothstep Min", Range(0, 1)) = 0.9
+        _TrackingLineSmoothstepMax ("Tracking Line Smoothstep Max", Range(0, 1)) = 0.95
+        _TrackingLineOffsetMultiplier ("Tracking Line Offset Multiplier", Range(0, 1)) = 0.03
+        _TrackingLineTimeOffsetMultiplier ("Tracking Line Time Offset Multiplier", Range(0, 1)) = 0.2
+        _TrackingLineColorShiftMultiplier ("Tracking Line Color Shift Multiplier", Range(0, 1)) = 0.3
+        _WhiteNoiseMaskPower ("White Noise Mask Power", Float) = 30
     }
     
     SubShader
@@ -27,7 +36,14 @@ Shader "RSPostProcessing/VHS"
             };
 
             sampler2D _MainTex;
-            float4 _MainTex_ST;
+            float3 _ChromaticAberrationLeftTone;
+            float _ChromaticAberrationPixelSize;
+            float _TrackingLineSmoothstepMin;
+            float _TrackingLineSmoothstepMax;
+            float _TrackingLineOffsetMultiplier;
+            float _TrackingLineTimeOffsetMultiplier;
+            float _TrackingLineColorShiftMultiplier;
+            float _WhiteNoiseMaskPower;
 
             float3 RGBtoYIQ(float3 color)
             {
@@ -88,20 +104,18 @@ Shader "RSPostProcessing/VHS"
 
                 // Tracking line mask.
                 float scanlinesMask = smoothstep(0.3, 0.7, noisyTapeRandomColor.y);
-                float trackingLineTimeOffset = hash23(float2(0.67, 0.57) * _Time.y).x * 0.15; // TODO: Expose 0.15 value.
+                float trackingLineTimeOffset = hash23(float2(0.67, 0.57) * _Time.y).x * _TrackingLineTimeOffsetMultiplier;
                 float trackingLineMask = sin(noisyTapeUV.y * 8 - (_Time.y + trackingLineTimeOffset) * 2);
-                trackingLineMask = smoothstep(0.9, 0.96, trackingLineMask); // TODO: Expose values.
-                float trackingLineOffset = (trackingLineMask * scanlinesMask) * 0.03; // TODO: Expose value.
-
-                float offsetDistance = 5; // TODO: Expose value.
-                float pixelWidth = 1.0 / _ScreenParams.x;
-
+                trackingLineMask = smoothstep(_TrackingLineSmoothstepMin, _TrackingLineSmoothstepMax, trackingLineMask);
+                trackingLineMask *= scanlinesMask;
+                float trackingLineOffset = trackingLineMask * _TrackingLineOffsetMultiplier;
+                
                 // Chromatic aberration.
-                float sampleOffset = interlacingMask * offsetDistance * pixelWidth;
+                float pixelWidth = 1.0 / _ScreenParams.x;
+                float sampleOffset = interlacingMask * (_ChromaticAberrationPixelSize * pixelWidth);
                 float2 colorSamplesUV = float2(i.uv.x - trackingLineOffset, i.uv.y); 
-                float3 leftSampleTone = float3(0, 1, 1);
-                float3 leftSample = tex2D(_MainTex, float2(colorSamplesUV.x + sampleOffset, colorSamplesUV.y)).rgb * leftSampleTone;
-                float3 rightSample = tex2D(_MainTex, float2(colorSamplesUV.x - sampleOffset, colorSamplesUV.y)).rgb * (1 - leftSampleTone);
+                float3 leftSample = tex2D(_MainTex, float2(colorSamplesUV.x + sampleOffset, colorSamplesUV.y)).rgb * _ChromaticAberrationLeftTone;
+                float3 rightSample = tex2D(_MainTex, float2(colorSamplesUV.x - sampleOffset, colorSamplesUV.y)).rgb * (1 - _ChromaticAberrationLeftTone);
                 float3 result = leftSample + rightSample;
 
                 // White noise.
@@ -110,14 +124,14 @@ Shader "RSPostProcessing/VHS"
                 float2 whiteNoiseMask = float2(hash23(float2(noisyTapeUV.y, _Time.y)).r, 0);
                 whiteNoiseMask += steppedScreenUV;
                 whiteNoiseMask.x *= 0.1;
-                float3 noisedResult = lerp(result, noiseColor, pow(hash23(whiteNoiseMask).x, 30)); // TODO: Expose value.
+                float3 noisedResult = lerp(result, noiseColor, pow(hash23(whiteNoiseMask).x, _WhiteNoiseMaskPower));
 
                 float noisedColorMask = (trackingLineMask * 0.7 + 0.3) * scanlinesMask;
                 
                 float3 yiqSpaceResult = RGBtoYIQ(noisedColorMask < 0.3 ? result : noisedResult);
                 yiqSpaceResult *= float3(0.9, 1.1, 1.5);
                 yiqSpaceResult += float3(0.1, -0.1, 0);
-                yiqSpaceResult.yz = Rotate(yiqSpaceResult.yz, trackingLineMask * 0.3); // TODO: Expose value.
+                yiqSpaceResult.yz = Rotate(yiqSpaceResult.yz, trackingLineMask * _TrackingLineColorShiftMultiplier);
                 result = YIQtoRGB(yiqSpaceResult);
 
                 return fixed4(result, 1);

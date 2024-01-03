@@ -669,6 +669,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shader: {fileID: 4800000, guid: 7daa5761e83666346b4f7f328b678378, type: 3}
+  _chromaticAberrationPixelSize: 5
+  _trackingLineSmoothstepMin: 0.9
+  _trackingLineSmoothstepMax: 0.95
+  _trackingLineOffsetMultiplier: 0.03
+  _trackingLineTimeOffsetMultiplier: 0.2
+  _whiteNoiseMaskPower: 50
 --- !u!1 &976446516
 GameObject:
   m_ObjectHideFlags: 0
