@@ -61,6 +61,16 @@ Shader "RSPostProcessing/VHS"
                 return mul(color, yiq_to_rgb);
             }
 
+            float hash(float2 input)
+            {
+                return frac(sin(dot(input.xyx, float3(127.1, 311.7, 74.7))) * 43758.5453123);
+            }
+            float2 hash22(float2 input)
+            {
+                float a = dot(input.xyx, float3(127.1, 311.7, 74.7));
+                float b = dot(input.yxx, float3(269.5, 183.3, 246.1));
+                return frac(sin(float2(a, b)) * 43758.5453123);
+            }
             float3 hash23(float2 input)
             {
                 float a = dot(input.xyx, float3(127.1, 311.7, 74.7));
@@ -104,7 +114,7 @@ Shader "RSPostProcessing/VHS"
 
                 // Tracking line mask.
                 float scanlinesMask = smoothstep(0.3, 0.7, noisyTapeRandomColor.y);
-                float trackingLineTimeOffset = hash23(float2(0.67, 0.57) * _Time.y).x * _TrackingLineTimeOffsetMultiplier;
+                float trackingLineTimeOffset = hash(float2(0.67, 0.57) * _Time.y) * _TrackingLineTimeOffsetMultiplier;
                 float trackingLineMask = sin(noisyTapeUV.y * 8 - (_Time.y + trackingLineTimeOffset) * 2);
                 trackingLineMask = smoothstep(_TrackingLineSmoothstepMin, _TrackingLineSmoothstepMax, trackingLineMask);
                 trackingLineMask *= scanlinesMask;
@@ -121,10 +131,10 @@ Shader "RSPostProcessing/VHS"
                 // White noise.
                 float3 noiseColor = float3(2, 2, 2);
                 float2 steppedScreenUV = floor(colorSamplesUV * (_ScreenParams.xy / 8)) / (_ScreenParams.xy / 8);
-                float2 whiteNoiseMask = float2(hash23(float2(noisyTapeUV.y, _Time.y)).r, 0);
+                float2 whiteNoiseMask = float2(hash(float2(noisyTapeUV.y, _Time.y)), 0);
                 whiteNoiseMask += steppedScreenUV;
                 whiteNoiseMask.x *= 0.1;
-                float3 noisedResult = lerp(result, noiseColor, pow(hash23(whiteNoiseMask).x, _WhiteNoiseMaskPower));
+                float3 noisedResult = lerp(result, noiseColor, pow(hash(whiteNoiseMask), _WhiteNoiseMaskPower));
 
                 float noisedColorMask = (trackingLineMask * 0.7 + 0.3) * scanlinesMask;
                 
