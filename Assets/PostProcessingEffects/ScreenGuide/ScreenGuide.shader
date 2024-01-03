@@ -15,8 +15,6 @@ Shader "RSPostProcessing/Screen Guide"
             #pragma fragment frag
             #pragma multi_compile _ ALWAYSSHOWCENTER
 
-            #include "UnityCG.cginc"
-
             struct appdata
             {
                 float4 vertex : POSITION;
@@ -25,13 +23,11 @@ Shader "RSPostProcessing/Screen Guide"
 
             struct v2f
             {
-                float2 uv     : TEXCOORD0;
                 float4 vertex : SV_POSITION;
+                float2 uv     : TEXCOORD0;
             };
 
             sampler2D _MainTex;
-            float4 _MainTex_ST;
-            
             fixed _LinesX;
             fixed _LinesY;
             fixed _LineScale;

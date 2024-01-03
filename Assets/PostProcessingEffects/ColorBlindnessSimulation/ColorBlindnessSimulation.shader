@@ -20,8 +20,8 @@ Shader "RSPostProcessing/Color Blindness Simulation"
 
         struct v2f
         {
-            float2 uv     : TEXCOORD0;
             float4 vertex : SV_POSITION;
+            float2 uv     : TEXCOORD0;
         };
 
         v2f vert(appdata v)
@@ -53,7 +53,7 @@ Shader "RSPostProcessing/Color Blindness Simulation"
             if (_Difference == 1)
             {
                 float3 difference = abs(color.rgb - color_blindness);
-                color_blindness = lerp(luminance(color), float3(1,0,0), saturate(dot(difference, 1)));
+                color_blindness = lerp(luminance(color), float3(1, 0, 0), saturate(dot(difference, 1)));
             }
 
             color_blindness = saturate(color_blindness);
@@ -73,7 +73,7 @@ Shader "RSPostProcessing/Color Blindness Simulation"
             fixed4 frag(v2f i) : SV_Target
             {
                 fixed4 color = tex2D(_MainTex, i.uv);
-                float3 color_blindness = float3(0,0,0);
+                float3 color_blindness = float3(0, 0, 0);
                 ComputeColorBlindness(color, protanomaly, color_blindness);
                 return fixed4(color_blindness, 1);
             }
@@ -93,7 +93,7 @@ Shader "RSPostProcessing/Color Blindness Simulation"
             fixed4 frag(v2f i) : SV_Target
             {
                 fixed4 color = tex2D(_MainTex, i.uv);
-                float3 color_blindness = float3(0,0,0);
+                float3 color_blindness = float3(0, 0, 0);
                 ComputeColorBlindness(color, deuteranomaly, color_blindness);
                 return fixed4(color_blindness, 1);
             }
@@ -113,7 +113,7 @@ Shader "RSPostProcessing/Color Blindness Simulation"
             fixed4 frag(v2f i) : SV_Target
             {
                 fixed4 color = tex2D(_MainTex, i.uv);
-                float3 color_blindness = float3(0,0,0);
+                float3 color_blindness = float3(0, 0, 0);
                 ComputeColorBlindness(color, tritanomaly, color_blindness);
                 return fixed4(color_blindness, 1);
             }

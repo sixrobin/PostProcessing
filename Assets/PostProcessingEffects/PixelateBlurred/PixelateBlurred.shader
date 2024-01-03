@@ -16,8 +16,6 @@
 			#pragma vertex vert
 			#pragma fragment frag
 			
-			#include "UnityCG.cginc"
-
 			sampler2D _MainTex;
 			float _ScaleX;
 			float _ScaleY;
@@ -34,7 +32,7 @@
 				float2 uv     : TEXCOORD0;
 			};
 
-			v2f vert(const appdata v)
+			v2f vert(appdata v)
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);

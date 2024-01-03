@@ -28,7 +28,7 @@ Shader "RSPostProcessing/Color Ramp"
 			uniform float _Weight;
 			half4 _MainTex_ST;
 
-			fixed4 frag (v2f_img i) : SV_Target
+			fixed4 frag(v2f_img i) : SV_Target
 			{
 				fixed4 original = tex2D(_MainTex, UnityStereoScreenSpaceUVAdjust(i.uv, _MainTex_ST));
 				fixed grayscale = Luminance(original.rgb);

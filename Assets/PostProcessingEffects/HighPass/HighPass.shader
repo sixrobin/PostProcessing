@@ -32,7 +32,7 @@ Shader "RSPostProcessing/High Pass"
             sampler2D _MainTex;
             fixed _Radius;
 
-            float3 compute_high_pass(const float2 uv)
+            float3 compute_high_pass(float2 uv)
             {
                 float max = sqrt(_Radius * _Radius * 2);
 
@@ -54,7 +54,7 @@ Shader "RSPostProcessing/High Pass"
                 return float3(col - blur) + float3(0.5, 0.5, 0.5);
             }
             
-            v2f vert(const appdata v)
+            v2f vert(appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
@@ -62,7 +62,7 @@ Shader "RSPostProcessing/High Pass"
                 return o;
             }
 
-            fixed4 frag(const v2f i) : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
                 return fixed4(compute_high_pass(i.uv), 1);
             }

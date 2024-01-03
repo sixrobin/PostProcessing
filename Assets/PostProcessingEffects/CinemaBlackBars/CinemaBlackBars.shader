@@ -15,8 +15,6 @@ Shader "RSPostProcessing/Cinema Black Bars"
             #pragma vertex vert
             #pragma fragment frag
 
-            #include "UnityCG.cginc"
-
             struct appdata
             {
                 float4 vertex : POSITION;
@@ -32,7 +30,7 @@ Shader "RSPostProcessing/Cinema Black Bars"
             sampler2D _MainTex;
             fixed _Width;
 
-            v2f vert(const appdata v)
+            v2f vert(appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
@@ -40,14 +38,11 @@ Shader "RSPostProcessing/Cinema Black Bars"
                 return o;
             }
 
-            fixed4 frag(const v2f i) : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
-                fixed4 col = tex2D(_MainTex, i.uv);
-
                 float2 uv_bars = abs((i.uv - 0.5) * 2);
                 float bars = step(uv_bars.y, 1 - _Width);
-                
-                return col * bars;
+                return tex2D(_MainTex, i.uv) * bars;
             }
             
             ENDCG

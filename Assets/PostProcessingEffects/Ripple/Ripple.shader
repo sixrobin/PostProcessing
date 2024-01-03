@@ -22,7 +22,10 @@
             Cull Off
             ZWrite Off
             
-            Fog { Mode off }
+            Fog
+            {
+                Mode off
+            }
 
             CGPROGRAM
 

@@ -31,8 +31,8 @@ Shader "RSPostProcessing/VHS"
 
             struct v2f
             {
-                float2 uv     : TEXCOORD0;
                 float4 vertex : SV_POSITION;
+                float2 uv     : TEXCOORD0;
             };
 
             sampler2D _MainTex;
@@ -52,7 +52,6 @@ Shader "RSPostProcessing/VHS"
                                               +0.2115, -0.5226, +0.3112 };
                 return mul(color, rgb_to_yiq);
             }
-            
             float3 YIQtoRGB(float3 color)
             {
                 const float3x3 yiq_to_rgb = { +1.0000, +0.9563, +0.6210,

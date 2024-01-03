@@ -35,7 +35,7 @@
 				float2 uv     : TEXCOORD0;
 			};
 
-			v2f vert(const appdata v)
+			v2f vert(appdata v)
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);

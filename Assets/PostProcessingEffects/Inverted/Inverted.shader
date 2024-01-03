@@ -31,7 +31,7 @@ Shader "RSPostProcessing/Inverted"
             sampler2D _MainTex;
             fixed _Percentage;
 
-            v2f vert(const appdata v)
+            v2f vert(appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
@@ -39,7 +39,7 @@ Shader "RSPostProcessing/Inverted"
                 return o;
             }
 
-            fixed4 frag(const v2f i) : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
                 fixed4 inverted_col = 1 - col;
