@@ -3,8 +3,8 @@ namespace RSPostProcessing
     using UnityEngine;
 
     [ExecuteInEditMode]
-    [AddComponentMenu("RSPostProcessing/Grayscale Ramp")]
-    public class GrayscaleRamp : CameraPostEffect
+    [AddComponentMenu("RSPostProcessing/Color Ramp")]
+    public class ColorRamp : CameraPostEffect
     {
         private static readonly int RAMP_TEX_ID = Shader.PropertyToID("_RampTex");
         private static readonly int RAMP_OFFSET_ID = Shader.PropertyToID("_RampOffset");
@@ -20,7 +20,7 @@ namespace RSPostProcessing
         public bool Inverted;
         private Texture2D _initRamp;
         
-        protected override string ShaderName => "RSPostProcessing/Grayscale Ramp";
+        protected override string ShaderName => "RSPostProcessing/Color Ramp";
 
         public Texture2D TextureRamp => _textureRamp;
 

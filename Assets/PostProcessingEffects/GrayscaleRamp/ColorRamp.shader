@@ -1,4 +1,4 @@
-Shader "RSPostProcessing/Grayscale Ramp"
+Shader "RSPostProcessing/Color Ramp"
 {
 	Properties
 	{
