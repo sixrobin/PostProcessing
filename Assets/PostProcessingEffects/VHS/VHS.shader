@@ -46,6 +46,14 @@ Shader "RSPostProcessing/VHS"
                                               +1.0000, -1.1070, +1.7046 };
                 return mul(color, yiq_to_rgb);
             }
+
+            float3 hash23(float2 input)
+            {
+                float a = dot(input.xyx, float3(127.1, 311.7, 74.7));
+                float b = dot(input.yxx, float3(269.5, 183.3, 246.1));
+                float c = dot(input.xyy, float3(113.5, 271.9, 124.6));
+                return frac(sin(float3(a, b, c)) * 43758.5453123);
+            }
             
             v2f vert(appdata v)
             {
@@ -60,16 +68,14 @@ Shader "RSPostProcessing/VHS"
                 // Screen interlacing mask.
                 float interlacingMask = floor((i.uv.y + _Time.y) * _ScreenParams.y) % 2;
 
-                float pixelOffsetDistance = 5;
+                float offsetDistance = 5; // TODO: Expose this.
                 float pixelWidth = 1.0 / _ScreenParams.x;
 
                 // Chromatic aberration.
-                float sampleOffset = interlacingMask * pixelOffsetDistance * pixelWidth;
-                float3 rightSampleTone = float3(0, 1, 1);
-                float2 leftSampleUV = float2(i.uv.x + sampleOffset, i.uv.y);
-                float2 rightSampleUV = float2(i.uv.x - sampleOffset, i.uv.y);
-                float3 leftSample = tex2D(_MainTex, leftSampleUV).rgb * rightSampleTone;
-                float3 rightSample = tex2D(_MainTex, rightSampleUV).rgb * (1 - rightSampleTone);
+                float sampleOffset = interlacingMask * offsetDistance * pixelWidth;
+                float3 leftSampleTone = float3(0, 1, 1);
+                float3 leftSample = tex2D(_MainTex, float2(i.uv.x + sampleOffset, i.uv.y)).rgb * leftSampleTone;
+                float3 rightSample = tex2D(_MainTex, float2(i.uv.x - sampleOffset, i.uv.y)).rgb * (1 - leftSampleTone);
                 float3 result = leftSample + rightSample;
 
                 float3 yiqSpaceResult = RGBtoYIQ(result);
