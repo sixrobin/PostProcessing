@@ -54,6 +54,21 @@ Shader "RSPostProcessing/VHS"
                 float c = dot(input.xyy, float3(113.5, 271.9, 124.6));
                 return frac(sin(float3(a, b, c)) * 43758.5453123);
             }
+
+            float2 Rotate(float2 uv, float rotation)
+            {
+                float s = sin(rotation);
+                float c = cos(rotation);
+                
+                float2x2 rotationMatrix = float2x2(c, -s, s, c);
+                rotationMatrix *= 0.5;
+                rotationMatrix += 0.5;
+                rotationMatrix = rotationMatrix * 2 - 1;
+                
+                uv.xy = mul(uv.xy, rotationMatrix);
+                
+                return uv;
+            }
             
             v2f vert(appdata v)
             {
@@ -68,19 +83,33 @@ Shader "RSPostProcessing/VHS"
                 // Screen interlacing mask.
                 float interlacingMask = floor((i.uv.y + _Time.y) * _ScreenParams.y) % 2;
 
-                float offsetDistance = 5; // TODO: Expose this.
+                // Noisy tape mask.
+                float3 noisyTapeRandomColor = hash23(float2(i.uv.y, _Time.y));
+                float noisyTapeMask = noisyTapeRandomColor.r / (_ScreenParams.x * 0.25);
+                float2 noisyTapeUV = i.uv + noisyTapeMask;
+
+                // Tracking line mask.
+                float scanlinesMask = smoothstep(0.3, 0.7, noisyTapeRandomColor.y);
+                float trackingLineTimeOffset = hash23(float2(0.67, 0.57) * _Time.y).x * 0.15; // TODO: Expose 0.15 value.
+                float trackingLineMask = sin(noisyTapeUV.y * 8 - (_Time.y + trackingLineTimeOffset) * 2);
+                trackingLineMask = smoothstep(0.9, 0.96, trackingLineMask); // TODO: Expose values.
+                float trackingLineOffset = (trackingLineMask * scanlinesMask) * 0.03; // TODO: Expose value.
+
+                float offsetDistance = 5; // TODO: Expose value.
                 float pixelWidth = 1.0 / _ScreenParams.x;
 
                 // Chromatic aberration.
                 float sampleOffset = interlacingMask * offsetDistance * pixelWidth;
+                float2 colorSamplesUV = float2(i.uv.x - trackingLineOffset, i.uv.y); 
                 float3 leftSampleTone = float3(0, 1, 1);
-                float3 leftSample = tex2D(_MainTex, float2(i.uv.x + sampleOffset, i.uv.y)).rgb * leftSampleTone;
-                float3 rightSample = tex2D(_MainTex, float2(i.uv.x - sampleOffset, i.uv.y)).rgb * (1 - leftSampleTone);
+                float3 leftSample = tex2D(_MainTex, float2(colorSamplesUV.x + sampleOffset, colorSamplesUV.y)).rgb * leftSampleTone;
+                float3 rightSample = tex2D(_MainTex, float2(colorSamplesUV.x - sampleOffset, colorSamplesUV.y)).rgb * (1 - leftSampleTone);
                 float3 result = leftSample + rightSample;
 
                 float3 yiqSpaceResult = RGBtoYIQ(result);
                 yiqSpaceResult *= float3(0.9, 1.1, 1.5);
                 yiqSpaceResult += float3(0.1, -0.1, 0);
+                yiqSpaceResult.yz = Rotate(yiqSpaceResult.yz, trackingLineMask * 0.3); // TODO: Expose value.
                 result = YIQtoRGB(yiqSpaceResult);
 
                 return fixed4(result, 1);
