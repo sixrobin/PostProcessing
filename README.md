@@ -7,6 +7,7 @@ Unity post processing effects.
 - Colorblindness simulation
 - CRT
 - Edge pan viewer
+- Gaussian blur
 - Glitchy effect
 - High pass
 - Inverted (+ a more flashy variation)
