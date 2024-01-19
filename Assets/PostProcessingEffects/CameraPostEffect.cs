@@ -53,7 +53,7 @@ namespace RSPostProcessing
         
         protected abstract void OnBeforeRenderImage(RenderTexture source, RenderTexture destination, Material material);
         
-        protected void OnRenderImage(RenderTexture source, RenderTexture destination)
+        protected virtual void OnRenderImage(RenderTexture source, RenderTexture destination)
         {
             if (Material == null)
                 return;
