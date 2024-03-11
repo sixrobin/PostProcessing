@@ -4,7 +4,8 @@ Shader "RSPostProcessing/Sobel Outline"
     {
     	_MainTex ("Main Tex", 2D) = "white" {}
 	    _OutlineThickness ("Outline Thickness", Float) = 1
-	    _OutlineStep ("Outline Step", Range(0, 1)) = 0.01
+	    _OutlineDepthMultiplier ("Outline Depth Multiplier", Float) = 1
+	    _OutlineDepthBias ("Outline Depth Bias", Float) = 1
     	_OutlineColor ("Outline Color", Color) = (0, 0, 0, 0)
     }
     
@@ -33,8 +34,10 @@ Shader "RSPostProcessing/Sobel Outline"
 
             sampler2D _MainTex;
             sampler2D _CameraDepthTexture;
+            sampler2D _CameraGBufferTexture2;
+            float _OutlineDepthMultiplier;
+            float _OutlineDepthBias;
 			float _OutlineThickness;
-			float _OutlineStep;
             float4 _OutlineColor;
 
 			float sobel(float2 uv, float2 offset)
@@ -58,6 +61,17 @@ Shader "RSPostProcessing/Sobel Outline"
 				
 				return sqrt(hr * hr + vt * vt);
 			}
+
+            float4 SobelSampleNormal(float2 uv, float3 offset)
+			{
+			    float4 pixelCenter = tex2D(_CameraGBufferTexture2, uv);
+			    float4 pixelLeft = tex2D(_CameraGBufferTexture2, uv - offset.xz);
+			    float4 pixelRight = tex2D(_CameraGBufferTexture2, uv + offset.xz);
+			    float4 pixelUp = tex2D(_CameraGBufferTexture2, uv + offset.zy);
+			    float4 pixelDown = tex2D(_CameraGBufferTexture2, uv - offset.zy);
+			    
+			    return abs(pixelLeft - pixelCenter) + abs(pixelRight - pixelCenter) + abs(pixelUp - pixelCenter) + abs(pixelDown - pixelCenter);
+			}
             
 			v2f vert(appdata v)
 			{
@@ -69,10 +83,16 @@ Shader "RSPostProcessing/Sobel Outline"
             
 			float4 frag(v2f i) : SV_Target
 			{
-				float2 offset = float2(1.0 / _ScreenParams.x, 1.0 / _ScreenParams.y) * _OutlineThickness;
-				float outline = step(_OutlineStep, sobel(i.uv, offset));
-				float4 color = tex2D(_MainTex, i.uv);
-				return lerp(color, _OutlineColor, outline);
+				float3 offset = float3((1.0 / _ScreenParams.x), (1.0 / _ScreenParams.y), 0.0) * _OutlineThickness;
+			    float3 sobelNormalVec = SobelSampleNormal(i.uv.xy, offset).rgb;
+				float sobelNormal = sobelNormalVec.x + sobelNormalVec.y + sobelNormalVec.z;
+				sobelNormal = pow(sobelNormal * _OutlineDepthMultiplier, _OutlineDepthBias);
+				return float4(sobelNormal.xxx, 1);
+				
+				// float2 offset = float2(1.0 / _ScreenParams.x, 1.0 / _ScreenParams.y) * _OutlineThickness;
+				// float sobelDepth = saturate(pow(saturate(sobel(i.uv, offset)) * _OutlineDepthMultiplier, _OutlineDepthBias));
+				// float4 color = tex2D(_MainTex, i.uv);
+				// return lerp(color, _OutlineColor, sobelDepth);
 			}
             
             ENDCG

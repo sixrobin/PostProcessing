@@ -727,7 +727,7 @@ Camera:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RenderingPath: -1
+  m_RenderingPath: 3
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
@@ -746,7 +746,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: -0.12523763, y: 0.8698157, z: -0.28409743, w: -0.38343817}
-  m_LocalPosition: {x: 3.53, y: 8.05, z: 2.15}
+  m_LocalPosition: {x: 4.9, y: 9.5, z: 3.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -766,8 +766,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shader: {fileID: 4800000, guid: 495320c24bc660d42a1f76dae49609fe, type: 3}
-  _outlineThickness: 3
-  _outlineStep: 0.01
+  _outlineThickness: 2
+  _outlineDepthMultiplier: 3
+  _outlineDepthBias: 10
   _outlineColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &976446516
 GameObject:
