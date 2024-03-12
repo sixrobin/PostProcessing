@@ -767,9 +767,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _shader: {fileID: 4800000, guid: 495320c24bc660d42a1f76dae49609fe, type: 3}
   _outlineThickness: 2
-  _outlineDepthMultiplier: 3
-  _outlineDepthBias: 10
   _outlineColor: {r: 0, g: 0, b: 0, a: 1}
+  _outlineDepthMultiplier: 50
+  _outlineDepthBias: 1
+  _outlineNormalMultiplier: 2
+  _outlineNormalBias: 10
 --- !u!1 &976446516
 GameObject:
   m_ObjectHideFlags: 0
