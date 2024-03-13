@@ -22,7 +22,8 @@ Shader "RSPostProcessing/Sobel Outline"
             
             #pragma vertex vert
             #pragma fragment frag
-
+            #pragma shader_feature DEBUG_NONE DEBUG_DEPTH DEBUG_NORMAL
+            
             #include "UnityCG.cginc"
 
 			struct appdata
@@ -96,11 +97,17 @@ Shader "RSPostProcessing/Sobel Outline"
 				float4 screenColor = tex2D(_MainTex, i.uv);
 
 				float sobelDepth = saturate(pow(saturate(computeSobelDepth(i.uv, offset)) * _OutlineDepthMultiplier, _OutlineDepthBias));
+				#ifdef DEBUG_DEPTH
+					return fixed4(sobelDepth.xxx, 1);
+				#endif
 				
 			    float3 sobelNormalVector = computeSobelNormal(i.uv.xy, offset).rgb;
 				float sobelNormal = sobelNormalVector.x + sobelNormalVector.y + sobelNormalVector.z;
 				sobelNormal = pow(sobelNormal * _OutlineNormalMultiplier, _OutlineNormalBias);
-
+				#ifdef DEBUG_NORMAL
+					return fixed4(sobelNormalVector, 1);
+				#endif
+				
 				float outline = saturate(max(sobelDepth, sobelNormal));
 				
 				return lerp(screenColor, _OutlineColor, outline);
