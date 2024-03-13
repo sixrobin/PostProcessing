@@ -17,4 +17,5 @@ Unity post processing effects.
 - Ripple
 - Screen guide (horizontal and vertical debug lines)
 - Sharpen
+- Sobel outline
 - VHS
