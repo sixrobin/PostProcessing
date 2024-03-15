@@ -45,7 +45,7 @@ Shader "RSPostProcessing/Sketch"
             sampler2D _CameraDepthTexture;
             sampler2D _CameraGBufferTexture2;
 
-            UNITY_DECLARE_TEX2DARRAY(_PenStrokes);
+            UNITY_DECLARE_TEX2DARRAY(_Crosshatches);
 
             sampler2D _MainTexDistortion;
             float4 _MainTexDistortion_ST;
@@ -126,9 +126,9 @@ Shader "RSPostProcessing/Sketch"
 				float luminance = Luminance(screenColor);
 				luminance = 1 - luminance;
 				luminance = floor(luminance * _Posterization) / _Posterization;
-				float penStrokes = UNITY_SAMPLE_TEX2DARRAY(_PenStrokes, float3(uv * 20, luminance * _Posterization));
+				float crosshatches = UNITY_SAMPLE_TEX2DARRAY(_Crosshatches, float3(uv * 20, luminance * _Posterization));
 
-				return lerp(penStrokes, _OutlineColor, outline);
+				return lerp(crosshatches, _OutlineColor, outline);
 			}
             
             ENDCG

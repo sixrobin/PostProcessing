@@ -7,7 +7,7 @@ namespace RSPostProcessing
     [AddComponentMenu("RSPostProcessing/Sketch")]
     public class Sketch : CameraPostEffect
     {
-        private static readonly int PEN_STROKES_ID = Shader.PropertyToID("_PenStrokes");
+        private static readonly int CROSSHATCHES_ID = Shader.PropertyToID("_Crosshatches");
         private static readonly int MAIN_TEX_DISTORTION_ID = Shader.PropertyToID("_MainTexDistortion");
         private static readonly int MAIN_TEX_DISTORTION_ST_ID = Shader.PropertyToID("_MainTexDistortion_ST");
         private static readonly int MAIN_TEX_DISTORTION_INTENSITY_ID = Shader.PropertyToID("_MainTexDistortionIntensity");
@@ -29,7 +29,7 @@ namespace RSPostProcessing
         [SerializeField, Min(1)]
         private int _posterization = 8;
         [SerializeField]
-        private Texture _penStrokes = null;
+        private Texture _crosshatches = null;
         
         [Header("DISTORTION")]
         [SerializeField]
@@ -55,7 +55,7 @@ namespace RSPostProcessing
 
         protected override void OnBeforeRenderImage(RenderTexture source, RenderTexture destination, Material material)
         {
-            material.SetTexture(PEN_STROKES_ID, _penStrokes);
+            material.SetTexture(CROSSHATCHES_ID, _crosshatches);
             material.SetTexture(MAIN_TEX_DISTORTION_ID, _distortionNoise);
             material.SetVector(MAIN_TEX_DISTORTION_ST_ID, _distortionNoiseST);
             material.SetFloat(MAIN_TEX_DISTORTION_INTENSITY_ID, _distortionIntensity);

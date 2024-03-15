@@ -1154,9 +1154,9 @@ MonoBehaviour:
   _shader: {fileID: 4800000, guid: cdcbfba90d2db0f4ca7006e181488c68, type: 3}
   _outlineThickness: 1
   _outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  _posterization: 4
-  _penStrokes: {fileID: 18700000, guid: 3a77e706b19875943b9d82abbcd031cd, type: 3}
-  _distortionNoise: {fileID: 2800000, guid: 5c26d9801c6e4a242b06b2d0a66d5b2e, type: 3}
+  _posterization: 5
+  _crosshatches: {fileID: 18700000, guid: 3a77e706b19875943b9d82abbcd031cd, type: 3}
+  _distortionNoise: {fileID: 2800000, guid: 48ad195f54985534abf3ff5b8da64404, type: 3}
   _distortionNoiseST: {x: 2, y: 2, z: 0, w: 0}
   _distortionIntensity: 0.004
   _outlineDepthMultiplier: 50
