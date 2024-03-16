@@ -81,5 +81,11 @@ namespace RSPostProcessing
         {
             Cleanup();
         }
+
+        private void Reset()
+        {
+            if (_shader == null)
+                FindShader();
+        }
     }
 }

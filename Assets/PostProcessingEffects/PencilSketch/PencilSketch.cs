@@ -1,7 +1,6 @@
 namespace RSPostProcessing
 {
     using UnityEngine;
-    using UnityEngine.Rendering;
 
     [ExecuteInEditMode]
     [AddComponentMenu("RSPostProcessing/Pencil Sketch")]
@@ -23,9 +22,9 @@ namespace RSPostProcessing
         [SerializeField, Min(1)]
         private int _outlineThickness = 3;
         [SerializeField]
-        private Color _outlineColor = Color.black;
+        private Color _outlineColor = Color.white;
         [SerializeField, Min(1)]
-        private int _posterization = 8;
+        private int _posterization = 4;
         [SerializeField]
         private Texture _crosshatches = null;
         
