@@ -1,4 +1,4 @@
-Shader "RSPostProcessing/Sketch"
+Shader "RSPostProcessing/Pencil Sketch"
 {
     Properties
     {

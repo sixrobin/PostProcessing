@@ -4,8 +4,8 @@ namespace RSPostProcessing
     using UnityEngine.Rendering;
 
     [ExecuteInEditMode]
-    [AddComponentMenu("RSPostProcessing/Sketch")]
-    public class Sketch : CameraPostEffect
+    [AddComponentMenu("RSPostProcessing/Pencil Sketch")]
+    public class PencilSketch : CameraPostEffect
     {
         private static readonly int CROSSHATCHES_ID = Shader.PropertyToID("_Crosshatches");
         private static readonly int MAIN_TEX_DISTORTION_ID = Shader.PropertyToID("_MainTexDistortion");
@@ -48,7 +48,7 @@ namespace RSPostProcessing
         [SerializeField]
         private float _outlineNormalBias = 1f;
 
-        protected override string ShaderName => "RSPostProcessing/Sketch";
+        protected override string ShaderName => "RSPostProcessing/Pencil Sketch";
 
         protected override void OnBeforeRenderImage(RenderTexture source, RenderTexture destination, Material material)
         {
