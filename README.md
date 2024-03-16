@@ -11,6 +11,7 @@ Unity post processing effects.
 - Glitchy effect
 - High pass
 - Inverted (+ a more flashy variation)
+- Pencil sketch
 - Pixelate (blurred and sharp variants)
 - Posterize
 - Radial blur
