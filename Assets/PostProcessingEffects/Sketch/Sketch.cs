@@ -24,8 +24,6 @@ namespace RSPostProcessing
         private int _outlineThickness = 3;
         [SerializeField]
         private Color _outlineColor = Color.black;
-
-        [Header("SKETCH EFFECT")]
         [SerializeField, Min(1)]
         private int _posterization = 8;
         [SerializeField]
@@ -35,17 +33,16 @@ namespace RSPostProcessing
         [SerializeField]
         private Texture2D _distortionNoise = null;
         [SerializeField]
-        private Vector4 _distortionNoiseST = Vector4.zero;
-        [SerializeField]
-        private float _distortionIntensity = 1f;
+        private Vector2 _distortionScale = Vector2.one;
+        [SerializeField, Range(0f, 0.01f)]
+        private float _distortionIntensity = 0.005f;
         
-        [Header("DEPTH")]
+        [Header("OUTLINE")]
         [SerializeField]
         private float _outlineDepthMultiplier = 1f;
         [SerializeField]
         private float _outlineDepthBias = 1f;
-        
-        [Header("NORMAL")]
+        [Space(10f)]
         [SerializeField]
         private float _outlineNormalMultiplier = 1f;
         [SerializeField]
@@ -57,10 +54,10 @@ namespace RSPostProcessing
         {
             material.SetTexture(CROSSHATCHES_ID, _crosshatches);
             material.SetTexture(MAIN_TEX_DISTORTION_ID, _distortionNoise);
-            material.SetVector(MAIN_TEX_DISTORTION_ST_ID, _distortionNoiseST);
+            material.SetVector(MAIN_TEX_DISTORTION_ST_ID, new Vector4(_distortionScale.x, _distortionScale.y, 0f, 0f));
             material.SetFloat(MAIN_TEX_DISTORTION_INTENSITY_ID, _distortionIntensity);
             material.SetFloat(POSTERIZATION_ID, _posterization);
-            material.SetFloat(OUTLINE_THICKNESS_ID, _outlineThickness);
+            material.SetFloat(OUTLINE_THICKNESS_ID, Mathf.RoundToInt(_outlineThickness * (Screen.width / 1080f)));
             material.SetColor(OUTLINE_COLOR_ID, _outlineColor);
             material.SetFloat(OUTLINE_DEPTH_MULTIPLIER_ID, _outlineDepthMultiplier);
             material.SetFloat(OUTLINE_DEPTH_BIAS_ID, _outlineDepthBias);

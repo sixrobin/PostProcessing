@@ -7,13 +7,12 @@ Shader "RSPostProcessing/Sketch"
     	_MainTexDistortionIntensity ("Main Tex Distortion Intensity", Float) = 1
     	
     	_Posterization ("Posterization", Float) = 256
-    	
+    	_Crosshatches ("Crosshatches", 2DArray) = "" {}
 	    _OutlineThickness ("Outline Thickness", Float) = 1
 	    _OutlineColor ("Outline Color", Color) = (0, 0, 0, 0)
 
 	    _OutlineDepthMultiplier ("Outline Depth Multiplier", Float) = 1
 	    _OutlineDepthBias ("Outline Depth Bias", Float) = 1
-    	
 	    _OutlineNormalMultiplier ("Outline Normal Multiplier", Float) = 1
 	    _OutlineNormalBias ("Outline Normal Bias", Float) = 1
     }
@@ -41,18 +40,16 @@ Shader "RSPostProcessing/Sketch"
 				float2 uv     : TEXCOORD0;
 			};
 
-            sampler2D _MainTex;
             sampler2D _CameraDepthTexture;
             sampler2D _CameraGBufferTexture2;
-
-            UNITY_DECLARE_TEX2DARRAY(_Crosshatches);
-
+            
+            sampler2D _MainTex;
             sampler2D _MainTexDistortion;
             float4 _MainTexDistortion_ST;
             float _MainTexDistortionIntensity;
-
-            float _Posterization;
             
+            float _Posterization;
+            UNITY_DECLARE_TEX2DARRAY(_Crosshatches);
 			float _OutlineThickness;
             float4 _OutlineColor;
 
