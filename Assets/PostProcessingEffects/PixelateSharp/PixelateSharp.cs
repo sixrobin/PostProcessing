@@ -72,8 +72,8 @@
 
         private void OnValidate()
         {
-            _scale.x = Mathf.Clamp(_scale.x, 1, 200);
-            _scale.y = Mathf.Clamp(_scale.y, 1, 200);
+            _scale.x = Mathf.Clamp(_scale.x, 0.01f, 200f);
+            _scale.y = Mathf.Clamp(_scale.y, 0.01f, 200f);
         }
     }
 }

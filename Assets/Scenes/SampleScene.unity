@@ -514,7 +514,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &459904992
 Light:
   m_ObjectHideFlags: 0
@@ -527,7 +527,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0, g: 1, b: 0.14966917, a: 1}
-  m_Intensity: 2.19
+  m_Intensity: 4
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -705,7 +705,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &511871110
 Light:
   m_ObjectHideFlags: 0
@@ -718,7 +718,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0.510552, b: 0, a: 1}
-  m_Intensity: 2.19
+  m_Intensity: 4
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -909,7 +909,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 2.1
+  m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1315,21 +1315,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5e479861cdced14fa46fbafb1b1703a, type: 3}
+  m_Script: {fileID: 11500000, guid: d7697ccb62d21264b9df4d7233348bab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shader: {fileID: 4800000, guid: cdcbfba90d2db0f4ca7006e181488c68, type: 3}
-  _outlineThickness: 1
-  _outlineColor: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
-  _posterization: 3
-  _crosshatches: {fileID: 18700000, guid: f43725a348239214caefbc5a810fcbb2, type: 3}
-  _distortionNoise: {fileID: 2800000, guid: 8706d59a215aae34791b5d0d311c0d63, type: 3}
-  _distortionScale: {x: 2, y: 2}
-  _distortionIntensity: 0.001
-  _outlineDepthMultiplier: 50
-  _outlineDepthBias: 2
-  _outlineNormalMultiplier: 4
-  _outlineNormalBias: 100
+  _shader: {fileID: 4800000, guid: 0e29b08320ca0d54cb0d73fabb432ee9, type: 3}
+  _posterizationSteps: 6
+  _ditherScale: 1
+  _colorRamp: {fileID: 2800000, guid: 5f4a99fb3aaf3954b9343dc927000099, type: 3}
+  _rampIntensity: 0.61
+  _invertRamp: 0
 --- !u!1 &976446516
 GameObject:
   m_ObjectHideFlags: 0
@@ -1944,7 +1938,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &1516948308
 Light:
   m_ObjectHideFlags: 0
@@ -1957,7 +1951,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.078704834, g: 0, b: 1, a: 1}
-  m_Intensity: 2.19
+  m_Intensity: 4
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
